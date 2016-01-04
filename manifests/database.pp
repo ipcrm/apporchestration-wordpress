@@ -1,3 +1,4 @@
+# See Readme
 define wordpress_app::database(
   String $app_domain,
   String $db_name   = 'wordpress',
@@ -9,7 +10,6 @@ define wordpress_app::database(
 
   # Set User Domain
   $mysql_user_domain = $app_domain ? {
-    'undef' => '%',
     /\S+/   => "%.${app_domain}",
     default => '%',
   }

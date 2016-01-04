@@ -1,11 +1,12 @@
+#See Readme
 application wordpress_app (
-  String $app_domain      = 'undef',
+  String $app_domain      = '',
   String $db_name         = 'wordpress',
   String $db_user         = 'wordpress',
   String $db_pass         = 'wordpress',
   String $db_port         = '3306',
   String $db_listen_ip    = '0.0.0.0',
-  String $webhead_int     = 'undef',
+  String $webhead_int     = '',
   String $webhead_port    = '8080',
   String $lb_listen_ip    = '0.0.0.0',
   String $lb_listen_port  = '80',
@@ -17,11 +18,11 @@ application wordpress_app (
 
   wordpress_app::database { $name:
     app_domain => $app_domain,
-    $db_name   => $db_name,
-    $db_user   => $db_user,
-    $db_pass   => $db_pass,
-    $db_port   => $db_port,
-    $listen_ip => $db_listen_ip,
+    db_name    => $db_name,
+    db_user    => $db_user,
+    db_pass    => $db_pass,
+    db_port    => $db_port,
+    listen_ip  => $db_listen_ip,
     export     => Wordpress_db["wdp-${name}"]
   }
 

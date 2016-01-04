@@ -1,3 +1,4 @@
+# See Readme
 define wordpress_app::lb (
   $balancermembers,
   Array $lb_options     = ['forwardfor', 'http-server-close', 'httplog'],
@@ -28,7 +29,7 @@ define wordpress_app::lb (
     }
   }
 
-  firewall { "${port} allow nginx access":
+  firewall { "${port} allow haproxy access":
     dport  => [$port],
     proto  => tcp,
     action => accept,

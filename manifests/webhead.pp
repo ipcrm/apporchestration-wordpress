@@ -1,3 +1,4 @@
+# See Readme
 define wordpress_app::webhead(
   String $host,
   String $port,
@@ -5,7 +6,7 @@ define wordpress_app::webhead(
   String $pass,
   String $db_name,
   String $apache_port = '8080',
-  String $interface = 'undef'
+  String $interface = '',
 ) {
 
   class {'apache':
@@ -21,7 +22,7 @@ define wordpress_app::webhead(
     vhost_name => $::fqdn,
     port       => $apache_port,
     docroot    => '/var/www/html',
-    ip         => '*',
+    ip         => $interface ? { /\S+/ => $::networking['interfaces'][$interface]['ip'], default => $::ipaddress },
   } ->
 
   class {'wordpress':
@@ -44,7 +45,7 @@ define wordpress_app::webhead(
 Wordpress_app::Webhead consumes Wordpress_db {}
 Wordpress_app::Webhead produces Wordpress_http {
   name => $name,
-  ip   => $interface ? { 'undef' => $::ipaddress, default => $::networking['interfaces'][$interface]['ip'] },
+  ip   => $interface ? { /\S+/ => $::networking['interfaces'][$interface]['ip'], default => $::ipaddress },
   port => $apache_port,
   host => $::hostname,
 }
