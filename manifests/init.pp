@@ -14,7 +14,7 @@ application wordpress_app (
   Array  $lb_options      = ['forwardfor','http-server-close','httplog'],
 ){
   $webcount = collect_component_titles($nodes, Wordpress_app::Webhead)
-  $webs = $webcount.map |$i| { Wordpress_http["webhead-${name}-${i}"] }
+  $webs = $webcount.map |$i| { Wordpress_http["webhead-${i}"] }
 
   wordpress_app::database { $name:
     app_domain => $app_domain,
@@ -27,11 +27,11 @@ application wordpress_app (
   }
 
   $webcount.each |$j| {
-    wordpress_app::webhead { "${name}-${j}":
+    wordpress_app::webhead { $j:
       apache_port => $webhead_port,
       interface   => $webhead_int,
       consume     => Wordpress_db["wdp-${name}"],
-      export      => Wordpress_http["webhead-${name}-${j}"],
+      export      => Wordpress_http["webhead-${j}"],
     }
   }
 
