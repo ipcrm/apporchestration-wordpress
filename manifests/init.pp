@@ -13,7 +13,7 @@ application wordpress_app (
   String $lb_balance_mode = 'roundrobin',
   Array  $lb_options      = ['forwardfor','http-server-close','httplog'],
 ){
-  $webcount = count(grep(join_keys_to_values(Wordpress_app[$name]['nodes'], ' '), 'Webhead'))
+  $webcount = collect_component_titles($nodes, Wordpress_app::Webhead)
   $webs = $webcount.map |$i| { Wordpress_http["webhead-${name}-${i}"] }
 
   wordpress_app::database { $name:
@@ -23,7 +23,7 @@ application wordpress_app (
     db_pass    => $db_pass,
     db_port    => $db_port,
     listen_ip  => $db_listen_ip,
-    export     => Wordpress_db["wdp-${name}"]
+    export     => Wordpress_db["wdp-${name}"],
   }
 
   $webcount.each |$j| {
@@ -31,7 +31,7 @@ application wordpress_app (
       apache_port => $webhead_port,
       interface   => $webhead_int,
       consume     => Wordpress_db["wdp-${name}"],
-      export      => Wordpress_http["webhead-${name}-${j}"]
+      export      => Wordpress_http["webhead-${name}-${j}"],
     }
   }
 
@@ -42,6 +42,6 @@ application wordpress_app (
     port            => $lb_listen_port,
     balance_mode    => $lb_balance_mode,
     require         => $webs,
-    export          => Wordpress_lb["wdp-${name}"]
+    export          => Wordpress_lb["wdp-${name}"],
   }
 }
